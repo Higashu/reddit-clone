@@ -3,12 +3,12 @@ import { Field, Int, ObjectType } from 'type-graphql';
 
 @ObjectType()
 @Entity()
-export class Post {
+export class User {
   @Field(() => Int)
   @PrimaryKey()
   id!: number;
 
-  @Field(() => String )
+  @Field(() => String)
   @Property({ type: 'date' })
   createdAt = new Date();
 
@@ -17,6 +17,10 @@ export class Post {
   updatedAt = new Date();
 
   @Field(() => String)
+  @Property({ type: 'text', unique: true })
+  username!: string;
+
+  // Pas de Field pour pas rendre le champ disponible dans GraphQL
   @Property({ type: 'text' })
-  title!: string;
+  password!: string;
 }
