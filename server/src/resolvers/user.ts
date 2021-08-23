@@ -4,10 +4,12 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  Root,
 } from 'type-graphql';
 import argon2 from 'argon2';
 import { getConnection } from 'typeorm';
@@ -41,8 +43,19 @@ class UserResponse {
   user?: User;
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
+    // You are the current user, ok to show email
+    if (req.session!.userId === user.id) {
+      return user.email;
+    }
+
+    // You are not the current user, not ok to show email
+    return '';
+  }
+
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg('token') token: string,
@@ -132,7 +145,7 @@ export class UserResolver {
       return null;
     }
 
-    return User.findOne(req.session!.id);
+    return User.findOne(req.session!.userId);
   }
 
   @Mutation(() => UserResponse)

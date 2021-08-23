@@ -6,13 +6,13 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { useState } from 'react';
 import InputField from '../../components/InputField';
-import { Wrapper } from '../../components/Wrapper';
+import Wrapper from '../../components/Wrapper';
 import { useChangePasswordMutation } from '../../generated/graphql';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { toErrorMap } from '../../utils/toErrorMap';
 import NextLink from 'next/link';
 
-const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+const ChangePassword: NextPage = () => {
   const router = useRouter();
   const [_, changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState('');
@@ -23,7 +23,8 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
         onSubmit={async (values, { setErrors }) => {
           const response = await changePassword({
             newPassword: values.newPassword,
-            token,
+            token:
+              typeof router.query.token === 'string' ? router.query.token : '',
           });
           if (response.data?.changePassword.errors) {
             const errorMap = toErrorMap(response.data.changePassword.errors);
@@ -46,7 +47,9 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             />
             {tokenError && (
               <Flex>
-                <Box mr={2} color='red'>{tokenError}</Box>
+                <Box mr={2} color='red'>
+                  {tokenError}
+                </Box>
                 <NextLink href='/forgot-password'>
                   <Link>Reset password once again </Link>
                 </NextLink>
@@ -60,12 +63,6 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
       </Formik>
     </Wrapper>
   );
-};
-
-ChangePassword.getInitialProps = ({ query }) => {
-  return {
-    token: query.token as string,
-  };
 };
 
 export default withUrqlClient(createUrqlClient)(ChangePassword);
