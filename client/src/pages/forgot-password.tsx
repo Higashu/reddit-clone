@@ -1,13 +1,10 @@
 import { Box, Button } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import { withUrqlClient } from 'next-urql';
-import router from 'next/dist/client/router';
 import React from 'react';
 import InputField from '../components/InputField';
-import { Wrapper } from '../components/Wrapper';
+import  Wrapper  from '../components/Wrapper';
 import { createUrqlClient } from '../utils/createUrqlClient';
-import { toErrorMap } from '../utils/toErrorMap';
-import login from './login';
 import { useForgotPasswordMutation } from '../generated/graphql';
 import { useState } from 'react';
 

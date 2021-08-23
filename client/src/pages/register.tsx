@@ -3,13 +3,12 @@ import { Formik, Form } from 'formik';
 import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/dist/client/router';
 import InputField from '../components/InputField';
-import { Wrapper } from '../components/Wrapper';
+import Wrapper from '../components/Wrapper';
 import { useRegisterMutation } from '../generated/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import { toErrorMap } from '../utils/toErrorMap';
 
 interface registerProps {}
-
 
 const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
@@ -17,16 +16,16 @@ const Register: React.FC<registerProps> = ({}) => {
   return (
     <Wrapper>
       <Formik
-        initialValues={{ username: '', password: '', email:'' }}
-        onSubmit={async (values,{setErrors}) => {
+        initialValues={{ username: '', password: '', email: '' }}
+        onSubmit={async (values, { setErrors }) => {
           const response = await register({
             username: values.username,
             password: values.password,
-            email:values.email,
+            email: values.email,
           });
-          if(response.data?.register.errors){
+          if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));
-          } else if (response.data?.register.user){
+          } else if (response.data?.register.user) {
             router.push('/');
           }
         }}
@@ -64,4 +63,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient) (Register);
+export default withUrqlClient(createUrqlClient)(Register);

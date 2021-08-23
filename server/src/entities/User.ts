@@ -5,23 +5,17 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  BaseEntity
+  BaseEntity,
+  OneToMany
 } from 'typeorm';
+import { Post } from './Posts';
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity{
+export class User extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
-
-  @Field(() => String)
-  @CreateDateColumn({ type: Date })
-  createdAt = Date;
-
-  @Field(() => String)
-  @UpdateDateColumn({ type: Date })
-  updatedAt = Date();
 
   @Field(() => String)
   @Column({ type: 'text', unique: true })
@@ -34,4 +28,15 @@ export class User extends BaseEntity{
   // Pas de Field pour pas rendre le champ disponible dans GraphQL
   @Column({ type: 'text' })
   password!: string;
+
+  @OneToMany(() => Post, (post) => post.creator)
+  posts: Post[];
+
+  @Field(() => String)
+  @CreateDateColumn({ type: Date })
+  createdAt = Date;
+
+  @Field(() => String)
+  @UpdateDateColumn({ type: Date })
+  updatedAt = Date();
 }
