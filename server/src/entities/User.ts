@@ -19,6 +19,10 @@ export class User {
   @Field(() => String)
   @Property({ type: 'text', unique: true })
   username!: string;
+  
+  @Field(() => String)
+  @Property({ type: 'text', unique: true })
+  email!: string;
 
   // Pas de Field pour pas rendre le champ disponible dans GraphQL
   @Property({ type: 'text' })
